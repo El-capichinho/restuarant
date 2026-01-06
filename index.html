@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DATH CUSSIN - Login</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>  
+    <form id="loginForm" class="form-container" style="position: inherit;">
+        
+        <div class="logo">
+            <img src="https://image2url.com/r2/default/images/1767372887218-4e5e8596-eac1-47c8-8aca-d7a5f655a832.png" alt="logo">
+        </div>
+
+        <h1>Welcome Back!</h1>
+        <p>Please login to your account.</p>
+
+        <div id="errorMessage" style="color: red; text-align: center; margin-bottom: 1rem; display: none;"></div>
+
+        <div style="text-align: left;">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email" id="email" class="form-control" placeholder="Enter User Email" required>
+        </div>
+        <br>
+        <div style="text-align: left;">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" class="form-control" placeholder="Enter User Password" required>
+        </div>
+
+        <div style="text-align:right;">
+            <a href="#">Forgot Password?</a>
+        </div>
+        
+        <div>
+            <button type="submit" class="login-btn">Login</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        </div>
+    
+        <div class="login-info">
+            <h2>Login Credentials</h2>
+            <p style="padding: 0%; margin:0%;">email: cook@gmail.com</p>
+            <p style="padding-bottom:2%; margin:0%;">password: cook1234</p>
+        </div>
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Simple validation (for demo purposes)
+            if (email === 'cook@gmail.com' && password === 'cook1234') {
+                // Store login state
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('userEmail', email);
+                
+                // Redirect to home
+                window.location.href = 'home.html';
+            } else {
+                errorMessage.textContent = '❌ Invalid email or password. Please try again.';
+                errorMessage.style.display = 'block';
+                
+                // Clear error after 3 seconds
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        });
+
+        // Check if already logged in
+        if (sessionStorage.getItem('isLoggedIn') === 'true') {
+            window.location.href = 'home.html';
+        }
+    </script>
+
+</body>
+</html>

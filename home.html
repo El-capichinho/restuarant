@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DATH CUSSIN - Food Shop</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      padding-top: 70px;
+      background-color: #fafafa;
+      background-image: url('https://image2url.com/r2/default/images/1767373054909-68d9bc27-bd80-4c0f-9367-1f0bd0f46ea6.png');
+      scroll-behavior: smooth;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f5f0e6;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 1000;
+    }
+
+    .menu-btn {
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-btn:hover {
+      background-color: #152a6b;
+    }
+
+    .cart-btn {
+      background-color: #d2b48c;
+      color: black;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cart-btn:hover {
+      background-color: #c19a6b;
+    }
+
+    .cart-badge {
+      background-color: #ff4444;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 12px;
+      font-weight: bold;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #8b4513;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 250px;
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      padding: 20px;
+      height: calc(100vh - 70px);
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+      z-index: 999;
+    }
+
+    .sidebar.hidden {
+      transform: translateX(-100%);
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li {
+      margin-bottom: 15px;
+    }
+
+    .sidebar li:first-child {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .sidebar li:not(:first-child) {
+      border: 1px solid #e0e0e0;
+      padding: 12px;
+      text-align: center;
+      background-color: #f9f9f9;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .sidebar li:not(:first-child):hover {
+      background-color: #f5f0e6;
+      transform: translateX(5px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar li:not(:first-child).active {
+      background-color: #1e3a8a;
+      border-color: #1e3a8a;
+      transform: translateX(5px);
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+    }
+
+    .sidebar li:not(:first-child).active a {
+      color: white;
+      font-weight: bold;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      display: block;
+    }
+
+    .sidebar img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .main-content {
+      padding: 30px;
+      margin-left: 0;
+      transition: margin-left 0.3s ease;
+    }
+
+    .main-content.shifted {
+      margin-left: 250px;
+    }
+
+    .filter-buttons {
+      max-width: 1400px;
+      margin: 0 auto 30px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .filter-btn {
+      background-color: #f9f9f9;
+      border: 2px solid #e0e0e0;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      color: #333;
+    }
+
+    .filter-btn:hover {
+      background-color: #f5f0e6;
+      border-color: #d2b48c;
+    }
+
+    .filter-btn.active {
+      background-color: #1e3a8a;
+      border-color: #1e3a8a;
+      color: white;
+    }
+
+    .category-section {
+      max-width: 1400px;
+      margin: 0 auto 60px;
+      scroll-margin-top: 90px;
+      display: none;
+    }
+
+    .category-section.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .category-header {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #d2b48c;
+      display: inline-block;
+    }
+
+    .category-description {
+      color: #666;
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    .card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .price {
+      color: #d2691e;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .card p {
+      color: #666;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+
+    .card button {
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+      margin-top: 15px;
+      transition: background-color 0.3s ease;
+    }
+
+    .card button:hover {
+      background-color: #152a6b;
+    }
+
+    .card button.added {
+      background-color: #22c55e;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .main-content.shifted {
+        margin-left: 0;
+      }
+
+      .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 0 15px;
+      }
+
+      .navbar {
+        padding: 12px 15px;
+      }
+
+      .logo {
+        font-size: 18px;
+      }
+
+      .category-header {
+        font-size: 24px;
+      }
+
+      .filter-buttons {
+        padding: 15px;
+      }
+
+      .filter-btn {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
+    }
+  footer {
+    background-color: hsl(23, 62%, 84%);
+    color: white;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+}
+
+.github-logo {
+    width: 40px;        /* default size */
+    max-width: 100%;
+    height: auto;       /* keeps aspect ratio */
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.github-logo:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive scaling */
+@media (max-width: 600px) {
+    .github-logo {
+        width: 50px;
+    }
+}
+
+
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <button class="menu-btn" onclick="toggleMenu()">
+      ☰ Menu
+    </button>
+    <h1 class="logo">DATH CUSSIN</h1>
+    <a class="cart-btn" href="cart.html">
+      🛒 Cart
+      <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+  </nav>
+
+  <div id="sidebar" class="sidebar hidden">
+    <ul>
+      <li>
+        <img src="https://image2url.com/r2/default/images/1767372887218-4e5e8596-eac1-47c8-8aca-d7a5f655a832.png" alt="DATH CUSSIN Logo">
+      </li>
+      <li onclick="filterCategory('all')"><a href="javascript:void(0)">🏠 All Items</a></li>
+      <li onclick="filterCategory('breakfast')"><a href="javascript:void(0)">🍳 Breakfast</a></li>
+      <li onclick="filterCategory('lunch')"><a href="javascript:void(0)">🍛 Lunch</a></li>
+      <li onclick="filterCategory('dinner')"><a href="javascript:void(0)">🍲 Dinner</a></li>
+      <li onclick="filterCategory('dessert')"><a href="javascript:void(0)">🍰 Dessert</a></li>
+      <li onclick="filterCategory('drinks')"><a href="javascript:void(0)">🥤 Drinks</a></li>
+    </ul>
+  </div>
+
+  <div id="mainContent" class="main-content">
+    <!-- FILTER BUTTONS -->
+    <div class="filter-buttons">
+      <button class="filter-btn active" onclick="filterCategory('all')">🏠 All Items</button>
+      <button class="filter-btn" onclick="filterCategory('breakfast')">🍳 Breakfast</button>
+      <button class="filter-btn" onclick="filterCategory('lunch')">🍛 Lunch</button>
+      <button class="filter-btn" onclick="filterCategory('dinner')">🍲 Dinner</button>
+      <button class="filter-btn" onclick="filterCategory('dessert')">🍰 Dessert</button>
+      <button class="filter-btn" onclick="filterCategory('drinks')">🥤 Drinks</button>
+    </div>
+
+    <!-- BREAKFAST SECTION -->
+    <section id="breakfast" class="category-section active">
+      <h2 class="category-header">🍳 Breakfast</h2>
+      <p class="category-description">Start your day with our delicious breakfast options</p>
+      <div class="products-grid">
+        <div class="card">
+          <img src="https://image2url.com/r2/default/images/1767482716449-34e3ab84-8dba-46cb-ba17-03c87372c50b.png" alt="Waakye Breakfast">
+          <div class="card-content">
+            <h2>Waakye</h2>
+            <p class="price">GH₵35.00</p>
+            <p>Rice and beans cooked with millet leaves. Served with spaghetti, gari, boiled eggs, and shito.</p>
+            <button onclick="addToCart(3, 'Waakye', 35.00, 'Rice and beans cooked with millet leaves. Served with spaghetti, gari, boiled eggs, and shito.', 'https://images.unsplash.com/photo-1609501676725-7186f017a4b7?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/default/images/1767483283775-be978893-0280-4386-894d-d1bcff1d6a7f.png" alt="Porridge">
+          <div class="card-content">
+            <h2>Hausa Koko & Koose</h2>
+            <p class="price">GH₵15.00</p>
+            <p>Spicy millet porridge served with koose (bean cakes). Perfect morning combination!</p>
+            <button onclick="addToCart(7, 'Hausa Koko & Koose', 15.00, 'Spicy millet porridge served with koose (bean cakes). Perfect morning combination!', 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=500" alt="Eggs and Bread">
+          <div class="card-content">
+            <h2>Omelette & Bread</h2>
+            <p class="price">GH₵25.00</p>
+            <p>Fluffy omelette with vegetables served with freshly baked bread and avocado.</p>
+            <button onclick="addToCart(8, 'Omelette & Bread', 25.00, 'Fluffy omelette with vegetables served with freshly baked bread and avocado.', 'https://images.unsplash.com/photo-1596040033229-a0b3b75a8863?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LUNCH SECTION -->
+    <section id="lunch" class="category-section">
+      <h2 class="category-header">🍛 Lunch</h2>
+      <p class="category-description">Hearty and satisfying lunch selections</p>
+      <div class="products-grid">
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket2/images/1767657637947-54c78a3e-84b3-40fc-a483-a9c8d335e1f9.png" alt="Jollof Rice">
+          <div class="card-content">
+            <h2>Jollof Rice</h2>
+            <p class="price">GH₵45.00</p>
+            <p>Aromatic rice cooked in rich tomato sauce with vegetables and spices. Served with fried chicken or fish.</p>
+            <button onclick="addToCart(1, 'Jollof Rice', 45.00, 'Aromatic rice cooked in rich tomato sauce with vegetables and spices. Served with fried chicken or fish.', 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket2/images/1767657745875-c9503bf7-16ff-4450-a566-fbb8a94eccfa.png" alt="Red Red">
+          <div class="card-content">
+            <h2>Red Red</h2>
+            <p class="price">GH₵30.00</p>
+            <p>Black-eyed peas cooked in palm oil with plantains. Served with fried ripe plantain (kelewele).</p>
+            <button onclick="addToCart(5, 'Red Red', 30.00, 'Black-eyed peas cooked in palm oil with plantains. Served with fried ripe plantain (kelewele).', 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500" alt="Fried Rice">
+          <div class="card-content">
+            <h2>Fried Rice & Chicken</h2>
+            <p class="price">GH₵40.00</p>
+            <p>Colorful fried rice with mixed vegetables and tender fried chicken pieces.</p>
+            <button onclick="addToCart(9, 'Fried Rice & Chicken', 40.00, 'Colorful fried rice with mixed vegetables and tender fried chicken pieces.', 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DINNER SECTION -->
+    <section id="dinner" class="category-section">
+      <h2 class="category-header">🍲 Dinner</h2>
+      <p class="category-description">Traditional Ghanaian dinner favorites</p>
+      <div class="products-grid">
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket3/images/1767658165977-3fd34bda-f989-40c9-b23c-2b8e48f4decc.png" alt="Fufu">
+          <div class="card-content">
+            <h2>Fufu with Light Soup</h2>
+            <p class="price">GH₵50.00</p>
+            <p>Pounded cassava and plantain served with aromatic tomato-based soup and your choice of meat.</p>
+            <button onclick="addToCart(4, 'Fufu with Light Soup', 50.00, 'Pounded cassava and plantain served with aromatic tomato-based soup and your choice of meat.', 'https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket2/images/1767658383200-938bf89e-cd56-4343-ba57-6a61fbe49a1d.png" alt="Banku">
+          <div class="card-content">
+            <h2>Banku with Tilapia</h2>
+            <p class="price">GH₵55.00</p>
+            <p>Fermented corn dough served with grilled tilapia and hot pepper sauce. A coastal favorite!</p>
+            <button onclick="addToCart(2, 'Banku with Tilapia', 55.00, 'Fermented corn dough served with grilled tilapia and hot pepper sauce. A coastal favorite!', 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket1/images/1767658620764-7beb38de-0062-4252-8aa7-c3fc44a0de46.png" alt="Banku with Okro">
+          <div class="card-content">
+            <h2>Banku with Okro Stew</h2>
+            <p class="price">GH₵35.00</p>
+            <p>Smooth banku paired with rich okro stew and assorted meat or fish.</p>
+            <button onclick="addToCart(10, 'Banku with Okro Stew', 35.00, 'Smooth banku paired with rich okro stew and assorted meat or fish.', 'https://images.unsplash.com/photo-1574484284002-952d92456975?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESSERT SECTION -->
+    <section id="dessert" class="category-section">
+      <h2 class="category-header">🍰 Dessert</h2>
+      <p class="category-description">Sweet treats to end your meal</p>
+      <div class="products-grid">
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket1/images/1767658892194-187e4f40-9b62-463d-99ea-e01d4d4f8094.png" alt="Kelewele">
+          <div class="card-content">
+            <h2>Kelewele</h2>
+            <p class="price">GH₵20.00</p>
+            <p>Spicy fried plantain cubes seasoned with ginger, pepper, and aromatic spices. Perfect snack!</p>
+            <button onclick="addToCart(6, 'Kelewele', 20.00, 'Spicy fried plantain cubes seasoned with ginger, pepper, and aromatic spices. Perfect snack!', 'https://images.unsplash.com/photo-1589621316382-008455b857cd?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500" alt="Cake">
+          <div class="card-content">
+            <h2>Chocolate Cake</h2>
+            <p class="price">GH₵25.00</p>
+            <p>Rich and moist chocolate cake with creamy frosting. Perfect for celebrations!</p>
+            <button onclick="addToCart(11, 'Chocolate Cake', 25.00, 'Rich and moist chocolate cake with creamy frosting. Perfect for celebrations!', 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket3/images/1767659137969-550bb079-92df-4150-b761-c34f43b52005.jpg" alt="Ice Cream">
+          <div class="card-content">
+            <h2>Vanilla Ice Cream</h2>
+            <p class="price">GH₵18.00</p>
+            <p>Smooth and creamy vanilla ice cream. Cool and refreshing dessert option.</p>
+            <button onclick="addToCart(12, 'Vanilla Ice Cream', 18.00, 'Smooth and creamy vanilla ice cream. Cool and refreshing dessert option.', 'https://images.unsplash.com/photo-1587241321921-91a834d82e46?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DRINKS SECTION -->
+    <section id="drinks" class="category-section">
+      <h2 class="category-header">🥤 Drinks</h2>
+      <p class="category-description">Refreshing beverages to quench your thirst</p>
+      <div class="products-grid">
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=500" alt="Fresh Juice">
+          <div class="card-content">
+            <h2>Fresh Fruit Juice</h2>
+            <p class="price">GH₵12.00</p>
+            <p>Freshly squeezed juice from tropical fruits. Choose from pineapple, orange, or watermelon.</p>
+            <button onclick="addToCart(13, 'Fresh Fruit Juice', 12.00, 'Freshly squeezed juice from tropical fruits. Choose from pineapple, orange, or watermelon.', 'https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket2/images/1767659246914-b5a0dd0a-b0c0-409c-bda8-af66f59131ea.jpg" alt="Sobolo">
+          <div class="card-content">
+            <h2>Sobolo (Hibiscus Tea)</h2>
+            <p class="price">GH₵10.00</p>
+            <p>Chilled hibiscus tea with ginger and pineapple. Traditional Ghanaian refreshment.</p>
+            <button onclick="addToCart(14, 'Sobolo (Hibiscus Tea)', 10.00, 'Chilled hibiscus tea with ginger and pineapple. Traditional Ghanaian refreshment.', 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img src="https://image2url.com/r2/bucket3/images/1767659748011-a3945466-2a07-44d0-88d3-73881ce50b94.png" alt="Soft Drink">
+          <div class="card-content">
+            <h2>Soft Drinks</h2>
+            <p class="price">GH₵8.00</p>
+            <p>Assorted soft drinks. Choose from Coke, Fanta, Sprite, or local favorites.</p>
+            <button onclick="addToCart(15, 'Soft Drinks', 8.00, 'Assorted soft drinks. Choose from Coke, Fanta, Sprite, or local favorites.', 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=500', this)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Check if user is logged in
+    function checkAuth() {
+      if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Toggle sidebar menu
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      sidebar.classList.toggle('hidden');
+      mainContent.classList.toggle('shifted');
+    }
+
+    // Filter products by category
+    function filterCategory(category) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.category-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Show selected category or all
+      if (category === 'all') {
+        sections.forEach(section => {
+          section.classList.add('active');
+        });
+      } else {
+        const selectedSection = document.getElementById(category);
+        if (selectedSection) {
+          selectedSection.classList.add('active');
+        }
+      }
+
+      // Update filter button active state
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      filterBtns.forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update sidebar active state
+      const sidebarItems = document.querySelectorAll('.sidebar li:not(:first-child)');
+      sidebarItems.forEach(item => {
+        item.classList.remove('active');
+      });
+      if (event.target.closest('.sidebar li')) {
+        event.target.closest('.sidebar li').classList.add('active');
+      }
+
+      // Close sidebar on mobile after selection
+      if (window.innerWidth <= 768) {
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        sidebar.classList.add('hidden');
+        mainContent.classList.remove('shifted');
+      }
+
+      // Scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Get cart from localStorage
+    function getCart() {
+      const cart = localStorage.getItem('cart');
+      return cart ? JSON.parse(cart) : [];
+    }
+
+    // Save cart to localStorage
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartBadge();
+    }
+
+    // Update cart badge count
+    function updateCartBadge() {
+      const cart = getCart();
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartBadge').textContent = totalItems;
+    }
+
+    // Add item to cart
+    function addToCart(id, name, price, description, image, button) {
+      let cart = getCart();
+      
+      // Check if item already exists
+      const existingItem = cart.find(item => item.id === id);
+      
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: id,
+          name: name,
+          price: price,
+          description: description,
+          image: image,
+          quantity: 1
+        });
+      }
+      
+      saveCart(cart);
+      
+      // Visual feedback
+      const originalText = button.textContent;
+      button.textContent = '✓ Added!';
+      button.classList.add('added');
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('added');
+      }, 1500);
+    }
+
+    // Initialize page
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      updateCartBadge();
+    });
+
+    // Show all categories by default
+    filterCategory('all');
+  </script>
+    <footer>
+        <p>&copy; 2025 Your Restaurant. All rights reserved.</p>
+           <p>Created by El-Capichinho</p>
+          <a href="https://github.com/El-Capichinho" target="_blank" aria-label="GitHub Profile">
+        <i class="fab fa-github github-icon"></i>
+    </a>
+    </footer>
+</body>
+</html>

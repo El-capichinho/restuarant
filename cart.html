@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DATH CUSSIN - Shopping Cart</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      padding-top: 70px;
+      background-color: #fafafa;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f5f0e6;
+      padding: 15px 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 1000;
+    }
+
+    .back-btn {
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background-color: #152a6b;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #8b4513;
+      margin: 0;
+      letter-spacing: 2px;
+    }
+
+    .cart-count {
+      background-color: #d2b48c;
+      color: black;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .page-title {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .cart-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    @media (min-width: 968px) {
+      .cart-layout {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+
+    .cart-items {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-cart-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      opacity: 0.3;
+    }
+
+    .empty-cart h2 {
+      color: #666;
+      margin-bottom: 10px;
+    }
+
+    .empty-cart p {
+      color: #999;
+      margin-bottom: 30px;
+    }
+
+    .continue-shopping {
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .continue-shopping:hover {
+      background-color: #152a6b;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      transition: background-color 0.2s ease;
+    }
+
+    .cart-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .item-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .item-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .item-name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+
+    .item-description {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .item-price {
+      color: #d2691e;
+      font-size: 18px;
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: auto;
+    }
+
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    .quantity-btn {
+      background-color: #f0f0f0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .quantity-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    .quantity-btn:active {
+      transform: scale(0.95);
+    }
+
+    .quantity-display {
+      min-width: 30px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .remove-btn {
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s ease;
+    }
+
+    .remove-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .item-total {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-left: auto;
+      align-self: center;
+    }
+
+    .order-summary {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      height: fit-content;
+      position: sticky;
+      top: 90px;
+    }
+
+    .summary-title {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .summary-row.total {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      padding-top: 15px;
+      border-top: 2px solid #e0e0e0;
+      margin-top: 10px;
+    }
+
+    .summary-row .amount {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .summary-row.total .amount {
+      color: #d2691e;
+      font-size: 24px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .checkout-btn:hover {
+      background-color: #152a6b;
+    }
+
+    .checkout-btn:active {
+      transform: scale(0.98);
+    }
+
+    .checkout-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background-color: #22c55e;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .cart-item {
+        flex-direction: column;
+      }
+
+      .item-image {
+        width: 100%;
+        height: 200px;
+      }
+
+      .item-total {
+        margin-left: 0;
+        align-self: flex-start;
+      }
+    }
+    footer {
+    background-color: hsl(27, 62%, 85%);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.github-logo {
+    width: 40px;        /* default size */
+    max-width: 100%;
+    height: auto;       /* keeps aspect ratio */
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+.github-logo:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive scaling */
+@media (max-width: 600px) {
+    .github-logo {
+        width: 30px;
+    }
+}
+
+
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="back-btn" href="home.html">
+      ← Back to Menu
+    </a>
+    <h1 class="logo">DATH CUSSIN</h1>
+    <div class="cart-count">
+      <span id="cartItemCount">0</span> Items
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1 class="page-title">Shopping Cart</h1>
+    <p class="page-subtitle">Review your order and proceed to checkout</p>
+
+    <div id="successMessage" class="success-message">
+      Item quantity updated successfully!
+    </div>
+
+    <div class="cart-layout">
+      <div class="cart-items">
+        <div id="cartItemsContainer">
+          <!-- Cart items will be dynamically inserted here -->
+        </div>
+      </div>
+
+      <div class="order-summary">
+        <h2 class="summary-title">Order Summary</h2>
+        
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span class="amount" id="subtotal">₵0.00</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Delivery Fee</span>
+          <span class="amount" id="deliveryFee">₵10.00</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Tax (12.5%)</span>
+          <span class="amount" id="tax">₵0.00</span>
+        </div>
+        
+        <div class="summary-row total">
+          <span>Total</span>
+          <span class="amount" id="total">₵0.00</span>
+        </div>
+
+        <button class="checkout-btn" onclick="proceedToCheckout()">
+          Proceed to Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check if user is logged in
+    function checkAuth() {
+      if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+        alert('Please login to view your cart');
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Load cart from localStorage
+    function getCart() {
+      const cart = localStorage.getItem('cart');
+      return cart ? JSON.parse(cart) : [];
+    }
+
+    // Save cart to localStorage
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Initialize cart on page load
+    function initCart() {
+      renderCartItems();
+      updateCartSummary();
+    }
+
+    // Render all cart items
+    function renderCartItems() {
+      const container = document.getElementById('cartItemsContainer');
+      const cartItems = getCart();
+      
+      if (cartItems.length === 0) {
+        container.innerHTML = `
+          <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h2>Your cart is empty</h2>
+            <p>Add some delicious dishes to get started!</p>
+            <a href="home.html" class="continue-shopping">Browse Menu</a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = cartItems.map(item => `
+        <div class="cart-item" id="item-${item.id}">
+          <img src="${item.image}" alt="${item.name}" class="item-image">
+          
+          <div class="item-details">
+            <h3 class="item-name">${item.name}</h3>
+            <p class="item-description">${item.description}</p>
+            <p class="item-price">₵${item.price.toFixed(2)} each</p>
+            
+            <div class="item-actions">
+              <div class="quantity-control">
+                <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">−</button>
+                <span class="quantity-display">${item.quantity}</span>
+                <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+              </div>
+              
+              <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+              
+              <span class="item-total">₵${(item.price * item.quantity).toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update item quantity
+    function updateQuantity(itemId, change) {
+      let cart = getCart();
+      const item = cart.find(i => i.id === itemId);
+      if (!item) return;
+
+      item.quantity += change;
+
+      // Remove item if quantity is 0
+      if (item.quantity <= 0) {
+        removeItem(itemId);
+        return;
+      }
+
+      saveCart(cart);
+      renderCartItems();
+      updateCartSummary();
+      showSuccessMessage();
+    }
+
+    // Remove item from cart
+    function removeItem(itemId) {
+      let cart = getCart();
+      cart = cart.filter(item => item.id !== itemId);
+      saveCart(cart);
+      renderCartItems();
+      updateCartSummary();
+    }
+
+    // Calculate and update cart summary
+    function updateCartSummary() {
+      const cart = getCart();
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = cart.length > 0 ? 10.00 : 0;
+      const tax = subtotal * 0.125;
+      const total = subtotal + deliveryFee + tax;
+
+      // Update display
+      document.getElementById('subtotal').textContent = `₵${subtotal.toFixed(2)}`;
+      document.getElementById('deliveryFee').textContent = `₵${deliveryFee.toFixed(2)}`;
+      document.getElementById('tax').textContent = `₵${tax.toFixed(2)}`;
+      document.getElementById('total').textContent = `₵${total.toFixed(2)}`;
+      
+      // Update cart count
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartItemCount').textContent = totalItems;
+
+      // Enable/disable checkout button
+      const checkoutBtn = document.querySelector('.checkout-btn');
+      if (cart.length === 0) {
+        checkoutBtn.disabled = true;
+      } else {
+        checkoutBtn.disabled = false;
+      }
+    }
+
+    // Proceed to checkout
+    function proceedToCheckout() {
+      const cart = getCart();
+      
+      if (cart.length === 0) {
+        alert('Your cart is empty! Add some items first.');
+        return;
+      }
+
+      const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // Get order details
+      const orderData = {
+        itemCount: itemCount,
+        subtotal: document.getElementById('subtotal').textContent,
+        deliveryFee: document.getElementById('deliveryFee').textContent,
+        tax: document.getElementById('tax').textContent,
+        total: document.getElementById('total').textContent
+      };
+      
+      // Store order data in sessionStorage
+      sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+      
+      // Clear cart
+      localStorage.removeItem('cart');
+      
+      // Redirect to success page
+      window.location.href = 'success.html';
+    }
+
+    // Show success message
+    function showSuccessMessage() {
+      const message = document.getElementById('successMessage');
+      message.classList.add('show');
+      
+      setTimeout(() => {
+        message.classList.remove('show');
+      }, 2000);
+    }
+
+    // Initialize cart when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      initCart();
+      
+       // Show all categories by default
+      filterCategory('all');
+      
+    })
+    
+  </script>
+    <footer>
+        <p>&copy; 2025 Your Restaurant. All rights reserved.</p>
+           <p>Created by El-Capichinho</p>
+          <a href="https://github.com/El-Capichinho" target="_blank" aria-label="GitHub Profile">
+       <i class="fab fa-github github-icon"></i>
+    </a>
+    </footer>
+</body>
+</html>

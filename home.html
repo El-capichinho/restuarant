@@ -353,7 +353,7 @@
     }
   footer {
     background-color: hsl(23, 62%, 84%);
-    color: white;
+    color: hsl(0, 20%, 18%);
     width: 100%;
     padding: 10px;
     text-align: center;
@@ -370,6 +370,32 @@
 .github-logo:hover {
     transform: scale(1.1);
 }
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  color: hsl(0, 7%, 11%);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  text-decoration: none;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  outline: none;
+}
+
+.icon-btn svg { display: block; }
 
 /* Responsive scaling */
 @media (max-width: 600px) {
@@ -731,10 +757,29 @@
   </script>
     <footer>
         <p>&copy; 2025 Your Restaurant. All rights reserved.</p>
-           <p>Created by El-Capichinho</p>
+          
+        <p>ABOUT US</p>
+        <p>Nestled in the heart of Accra, DATH CUSSIN blends modern Ghanaian flavors with international flair. 
+          Guests enjoy freshly caught seafood, vibrant plant-based dishes, and handcrafted cocktails in a warm, 
+          coastal-inspired setting. Whether you’re celebrating with friends or seeking a quiet dinner for two, 
+          our attentive staff and lively atmosphere make every visit unforgettable.
+</p>
+        <p>For more information please contact</p>
+        <!-- Gmail button -->
+        <a
+          href="mailto:battakumah8@gmail.com" aria-label="Send email via Gmail" class="icon-btn gmail-btn"
+          title="Send Email">
+          <i class="fa-solid fa-envelope"></i>
+        </a>
+            <a href="https://wa.me/233561128408" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp"
+        class="icon-btn whatsapp" title="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+       <p>Created by El-Capichinho</p>
           <a href="https://github.com/El-Capichinho" target="_blank" aria-label="GitHub Profile">
         <i class="fab fa-github github-icon"></i>
-    </a>
+        </a>
+
     </footer>
 </body>
 </html>
